@@ -1,0 +1,246 @@
+@import "tailwindcss";
+
+@theme {
+  --color-oled: #07090b;
+  --color-bezel: #12171c;
+  --color-titanium: #8d98a2;
+  --color-face: #0c1116;
+  --color-ink: #f3f6f7;
+  --color-dim: #8e99a3;
+  --color-line: #2a3640;
+  --color-signal: #3ee0a0;
+  --color-alert: #ff8a3d;
+  --font-display: "Barlow Condensed", ui-sans-serif, sans-serif;
+  --font-sans: "Outfit", ui-sans-serif, sans-serif;
+}
+
+@layer base {
+  html {
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+    background: var(--color-oled);
+    color: var(--color-ink);
+  }
+
+  body {
+    margin: 0;
+    min-height: 100dvh;
+    background:
+      radial-gradient(1200px 600px at 50% -10%, color-mix(in oklab, var(--color-signal) 8%, transparent), transparent 55%),
+      var(--color-oled);
+    font-family: var(--font-sans);
+  }
+
+  button:not(:disabled),
+  [role="button"]:not(:disabled) {
+    cursor: pointer;
+  }
+
+  ::selection {
+    background: color-mix(in oklab, var(--color-signal) 35%, transparent);
+    color: var(--color-ink);
+  }
+}
+
+.watch-rig {
+  position: relative;
+  width: min(100%, 26rem);
+  margin-inline: auto;
+}
+
+.watch-bezel {
+  position: relative;
+  width: 100%;
+  aspect-ratio: 1;
+  border-radius: 999px;
+  background:
+    radial-gradient(circle at 32% 28%, color-mix(in oklab, var(--color-titanium) 34%, var(--color-bezel)), var(--color-bezel) 48%, #05070a 82%);
+  box-shadow:
+    inset 0 0 0 2px color-mix(in oklab, var(--color-titanium) 40%, transparent),
+    0 18px 40px color-mix(in oklab, black 45%, transparent);
+}
+
+.watch-face {
+  position: absolute;
+  inset: 5.5%;
+  border-radius: 999px;
+  overflow: hidden;
+  background: var(--color-face);
+  box-shadow: inset 0 0 0 1px color-mix(in oklab, var(--color-ink) 10%, transparent);
+}
+
+.watch-face.is-pulse {
+  animation: halo-pulse 1.4s ease-out 2;
+}
+
+.watch-safe {
+  position: absolute;
+  inset: 16%;
+  display: flex;
+  flex-direction: column;
+  min-height: 0;
+  min-width: 0;
+}
+
+.watch-dock {
+  display: grid;
+  grid-template-columns: repeat(5, minmax(0, 1fr));
+  gap: 0.35rem;
+  margin-top: 0.75rem;
+}
+
+.hw {
+  display: grid;
+  place-items: center;
+  min-height: 2.75rem;
+  border: 0;
+  border-radius: 999px;
+  background: linear-gradient(180deg, color-mix(in oklab, var(--color-titanium) 42%, var(--color-bezel)), #0a0d10);
+  color: var(--color-dim);
+  box-shadow: inset 0 1px 0 color-mix(in oklab, var(--color-ink) 16%, transparent);
+}
+
+.hw span {
+  font-family: var(--font-display);
+  font-size: 0.7rem;
+  font-weight: 600;
+  letter-spacing: 0.12em;
+}
+
+.hw:active {
+  transform: scale(0.97);
+  color: var(--color-ink);
+}
+
+.hw-start span { color: var(--color-signal); }
+
+@media (min-width: 64rem) {
+  .watch-rig {
+    width: min(100%, 36rem);
+    aspect-ratio: 1;
+  }
+
+  .watch-bezel {
+    position: absolute;
+    inset: 2.75rem;
+    width: auto;
+    height: auto;
+  }
+
+  .watch-dock {
+    position: absolute;
+    inset: 0;
+    display: block;
+    margin: 0;
+    pointer-events: none;
+  }
+
+  .hw {
+    position: absolute;
+    pointer-events: auto;
+    min-height: 0;
+  }
+
+  .hw-up span,
+  .hw-down span {
+    writing-mode: vertical-rl;
+  }
+
+  .hw-light { top: 0.35rem; left: 50%; margin-left: -2.3rem; width: 4.6rem; height: 1.7rem; }
+  .hw-up { top: 27%; right: 0.15rem; width: 2.4rem; height: 3.6rem; }
+  .hw-down { top: 54%; right: 0.15rem; width: 2.4rem; height: 3.6rem; }
+  .hw-start { bottom: 0.4rem; right: 16%; width: 4.8rem; height: 1.7rem; }
+  .hw-back { bottom: 0.5rem; left: 14%; width: 4.6rem; height: 1.7rem; }
+}
+
+.watch-scroll {
+  scrollbar-width: none;
+  overscroll-behavior: contain;
+}
+
+.watch-scroll::-webkit-scrollbar {
+  display: none;
+}
+
+.hw:active {
+  transform: scale(0.97);
+  color: var(--color-ink);
+}
+
+.wave {
+  display: flex;
+  align-items: center;
+  gap: 2px;
+  height: 1.25rem;
+}
+
+.wave i {
+  display: block;
+  width: 2px;
+  border-radius: 999px;
+  background: currentColor;
+  height: 30%;
+  animation: wave 0.9s ease-in-out infinite;
+}
+
+.wave i:nth-child(odd) { animation-delay: 0.15s; }
+.wave.is-idle i { animation: none; height: 35%; }
+
+@keyframes wave {
+  0%, 100% { height: 25%; }
+  50% { height: 100%; }
+}
+
+@keyframes halo-pulse {
+  0% { box-shadow: inset 0 0 0 1px color-mix(in oklab, var(--color-signal) 50%, transparent); }
+  100% { box-shadow: inset 0 0 0 1px transparent; }
+}
+
+.row-on {
+  background: color-mix(in oklab, var(--color-signal) 16%, var(--color-face));
+  box-shadow: inset 3px 0 0 var(--color-signal);
+}
+
+.is-picked {
+  box-shadow: inset 0 0 0 1px var(--color-signal);
+  border-radius: 1rem;
+}
+
+.bubble-mine,
+.bubble-theirs {
+  max-width: 92%;
+}
+
+.bubble-mine {
+  background: color-mix(in oklab, var(--color-signal) 18%, var(--color-face));
+}
+
+.bubble-theirs {
+  background: color-mix(in oklab, var(--color-ink) 7%, var(--color-face));
+}
+
+.phone-shell {
+  display: flex;
+  flex-direction: column;
+  height: min(40rem, 78dvh);
+  min-height: 28rem;
+  border-radius: 2rem;
+  border: 1px solid var(--color-line);
+  background: color-mix(in oklab, var(--color-ink) 3%, var(--color-oled));
+  padding: 1.25rem;
+}
+
+.glance-sheet {
+  background: color-mix(in oklab, var(--color-face) 94%, transparent);
+  backdrop-filter: blur(8px);
+}
+@media (max-width: 420px) {
+  .hw span { font-size: 0.62rem; letter-spacing: 0.08em; }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .watch-face.is-pulse,
+  .wave i {
+    animation: none;
+  }
+}
