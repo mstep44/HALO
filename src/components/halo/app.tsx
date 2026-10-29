@@ -1,8 +1,23 @@
 import { useEffect } from "react";
 import { armDemo, totalUnread, useHalo } from "@/lib/halo/store";
+import { themeById } from "@/lib/halo/themes";
 import { HardwareProvider } from "./hardware";
 import { Phone } from "./phone";
 import { Watch } from "./watch";
+
+function ThemePaint() {
+  const theme = useHalo((s) => s.theme);
+  useEffect(() => {
+    const spec = themeById(theme);
+    const root = document.documentElement;
+    root.style.setProperty("--color-signal", spec.signal);
+    root.style.setProperty("--color-alert", spec.alert);
+    root.style.setProperty("--color-face", spec.face);
+    root.style.setProperty("--color-bezel", spec.bezel);
+    root.style.setProperty("--color-line", spec.line);
+  }, [theme]);
+  return null;
+}
 
 export function HaloApp() {
   const device = useHalo((s) => s.device);
@@ -23,7 +38,10 @@ export function HaloApp() {
           state.threads.length > 0 &&
           state.threads.every((t) => Array.isArray(t.messages) && typeof t.rcs === "boolean");
         if (!valid) state.reset();
-        else armDemo();
+        else {
+          if (state.theme !== themeById(state.theme).id) state.setTheme("signal");
+          armDemo();
+        }
       });
     return () => {
       cancel = true;
@@ -32,6 +50,7 @@ export function HaloApp() {
 
   return (
     <HardwareProvider>
+      <ThemePaint />
       <main className="mx-auto flex min-h-dvh w-full max-w-6xl flex-col overflow-x-hidden px-4 py-6 sm:px-8">
         <header className="mb-5 flex flex-wrap items-end justify-between gap-4">
           <div className="max-w-xl">
@@ -80,8 +99,8 @@ export function HaloApp() {
           </div>
         </div>
         <p className="mt-5 text-center text-xs text-pretty text-dim">
-          UP and DOWN scroll. START opens or sends. BACK returns. LIGHT shows the phone link. On a wide screen the
-          handset stays beside the watch.
+          UP and DOWN scroll. START opens or sends. BACK returns. LIGHT shows the phone link. The color dot on the
+          watch changes the face. On a wide screen the handset stays beside the watch.
         </p>
       </main>
     </HardwareProvider>

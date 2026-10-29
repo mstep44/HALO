@@ -2,6 +2,8 @@ import { create } from "zustand";
 import { persist } from "zustand/middleware";
 import { clockNow, createSeed, nextId } from "./data";
 import type { ChatMessage, Delivery, Media, ReactionId, Screen, Thread, Transport } from "./types";
+import type { ThemeId } from "./themes";
+import { themeById } from "./themes";
 
 type Banner = { threadId: string; title: string; text: string } | null;
 
@@ -13,6 +15,7 @@ type HaloState = {
   pulse: boolean;
   glance: boolean;
   device: "wrist" | "handset";
+  theme: ThemeId;
   openThread: (id: string) => void;
   back: () => void;
   moveFocus: (dir: -1 | 1) => void;
@@ -24,6 +27,8 @@ type HaloState = {
   dismissBanner: () => void;
   setGlance: (open: boolean) => void;
   setDevice: (device: "wrist" | "handset") => void;
+  setTheme: (theme: ThemeId) => void;
+  openColors: () => void;
   reset: () => void;
 };
 
@@ -76,6 +81,7 @@ export const useHalo = create<HaloState>()(
       pulse: false,
       glance: false,
       device: "wrist",
+      theme: "signal",
 
       openThread: (id) => {
         const now = Date.now();
@@ -105,7 +111,7 @@ export const useHalo = create<HaloState>()(
           set({ screen: { name: "thread", threadId: screen.threadId } });
           return;
         }
-        if (screen.name === "thread") set({ screen: { name: "inbox" } });
+        if (screen.name === "thread" || screen.name === "colors") set({ screen: { name: "inbox" } });
       },
 
       moveFocus: (dir) => {
@@ -199,6 +205,8 @@ export const useHalo = create<HaloState>()(
       dismissBanner: () => set({ banner: null, pulse: false }),
       setGlance: (open) => set({ glance: open }),
       setDevice: (device) => set({ device }),
+      setTheme: (theme) => set({ theme: themeById(theme).id }),
+      openColors: () => set({ screen: { name: "colors" }, glance: false }),
 
       reset: () => {
         epoch += 1;
@@ -223,6 +231,7 @@ export const useHalo = create<HaloState>()(
         screen: s.screen,
         focus: s.focus,
         device: s.device,
+        theme: s.theme,
       }),
     },
   ),

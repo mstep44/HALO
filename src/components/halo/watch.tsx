@@ -1,7 +1,9 @@
 import { Bluetooth, X } from "lucide-react";
 import { useEffect, useState } from "react";
 import { useHalo } from "@/lib/halo/store";
+import { themeById } from "@/lib/halo/themes";
 import { useHardware, useHardwareFire } from "./hardware";
+import { Colors } from "./colors";
 import { Inbox } from "./inbox";
 import { ThreadView } from "./thread";
 
@@ -109,6 +111,8 @@ export function Watch() {
   const glance = useHalo((s) => s.glance);
   const setGlance = useHalo((s) => s.setGlance);
   const banner = useHalo((s) => s.banner);
+  const theme = useHalo((s) => s.theme);
+  const openColors = useHalo((s) => s.openColors);
   const fire = useHardwareFire();
 
   return (
@@ -118,13 +122,22 @@ export function Watch() {
           <div className="watch-safe">
             <div className="mb-1 flex items-center justify-between">
               <Clock />
-              <span className="flex items-center gap-1 text-xs text-signal">
+              <span className="flex items-center gap-2 text-xs text-signal">
+                <button
+                  type="button"
+                  className="grid size-11 place-items-center"
+                  aria-label={`Watch color, ${themeById(theme).name}. Change color.`}
+                  onClick={() => openColors()}
+                >
+                  <span className="color-dot" />
+                </button>
                 <Bluetooth className="size-3.5" aria-label="Phone connected" />
                 <span className="font-display tracking-widest">RCS</span>
               </span>
             </div>
             {screen.name === "inbox" ? <Inbox /> : null}
-            {screen.name !== "inbox" ? (
+            {screen.name === "colors" ? <Colors /> : null}
+            {screen.name === "thread" || screen.name === "photo" ? (
               <div className={screen.name === "photo" ? "hidden" : "flex min-h-0 flex-1 flex-col"}>
                 <ThreadView threadId={screen.threadId} />
               </div>

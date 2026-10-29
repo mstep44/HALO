@@ -50,4 +50,5 @@ export type Thread = {
 export type Screen =
   | { name: "inbox" }
   | { name: "thread"; threadId: string }
-  | { name: "photo"; threadId: string; messageId: string };
+  | { name: "photo"; threadId: string; messageId: string }
+  | { name: "colors" };

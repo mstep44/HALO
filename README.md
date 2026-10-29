@@ -13,3 +13,4 @@ npm run dev
 ```
 
 This preview uses sample threads. It does not connect to a carrier or a physical watch.
+The color dot on the watch face switches the accent. UP and DOWN preview a look. START keeps it.

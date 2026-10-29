@@ -7,7 +7,7 @@ export function Phone() {
   const screen = useHalo((s) => s.screen);
   const focus = useHalo((s) => s.focus);
   const openThread = useHalo((s) => s.openThread);
-  const activeId = screen.name === "inbox" ? threads[focus]?.id : screen.threadId;
+  const activeId = screen.name === "thread" || screen.name === "photo" ? screen.threadId : threads[focus]?.id;
   const thread = threads.find((t) => t.id === activeId) ?? threads[0];
   const scroller = useRef<HTMLDivElement>(null);
   const [playing, setPlaying] = useState<string | null>(null);

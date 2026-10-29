@@ -114,6 +114,16 @@
 
 .hw-start span { color: var(--color-signal); }
 
+.color-dot {
+  display: block;
+  width: 0.9rem;
+  height: 0.9rem;
+  flex: none;
+  border-radius: 999px;
+  background: var(--color-signal);
+  box-shadow: 0 0 0 2px color-mix(in oklab, var(--color-ink) 22%, transparent);
+}
+
 @media (min-width: 64rem) {
   .watch-rig {
     width: min(100%, 36rem);
